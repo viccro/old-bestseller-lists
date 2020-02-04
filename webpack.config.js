@@ -1,14 +1,23 @@
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-  entry: './src/app.js',
+  entry:  {
+    bookLists: './src/app.js',
+    calendarSelect: './src/calendar-select.js'
+  },
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    filename: 'bundle.[name].js',
+    path: path.resolve(__dirname, 'dist'),
   },
   devServer: {
     contentBase: './dist',
   },
+  plugins: [
+    new Dotenv({
+      path: './src/.env'
+    })
+  ],
   module: {
     rules: [
       {
@@ -39,7 +48,8 @@ module.exports = {
           }
         ]
       }
-    ]
+    ],
+
   },
   node: {fs: "empty"}
 };
