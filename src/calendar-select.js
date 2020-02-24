@@ -4,38 +4,39 @@ import * as $ from 'jquery';
 
 require("dotenv").config();
 
-function hitBestsellerAPI() {
-    const url = 'https://api.nytimes.com/svc/books/v3/lists/names.json?api-key='+process.env.NYT_API_KEY;
-    var bookLists = new Array();
+const url = 'https://api.nytimes.com/svc/books/v3/lists/2019-01-20/hardcover-fiction.json?api-key='+process.env.NYT_API_KEY;
 
-    //Hit the NYT Book Lists API to get a list of possible Bestseller Lists to access
-    fetch(url)
-        .then((resp) => resp.json())
-        .then(function(data) {
-        let bookListsRaw = data.results;
+//Hit the NYT Book Lists API to get a list of possible Bestseller Lists to access
+fetch(url)
+    .then((resp) => resp.json())
+    .then(function(data) {
+    let bestsellerListRaw = data.results.books;
+    console.log(data)
 
-        return bookListsRaw.map(function(bookListRaw) {
-            let li = document.createElement('li'),
-            span = document.createElement('span'),
-            ul = $("#bookLists")[0];
+    return bestsellerListRaw.map(function(bestsellerRaw) {
+        let li = document.createElement('li'),
+        span = document.createElement('span'),
+        img = document.createElement('img'),
+        ul = $("#bestsellerList")[0];
 
-            span.innerHTML = `${bookListRaw.list_name} ${bookListRaw.updated} ${bookListRaw.oldest_published_date} ${bookListRaw.newest_published_date}`;
-            li.appendChild(span);
-            ul.appendChild(li);  
+        try{
+        span.innerHTML = `${bestsellerRaw.title} ${bestsellerRaw.author} ${bestsellerRaw.primary_isbn13}`;
+        img.src=bestsellerRaw.book_image
 
-            var bookList = {name:bookListRaw.list_name, oldest_published_date:bookListRaw.oldest_published_date, newest_published_date:bookListRaw.newest_published_date }
+        li.appendChild(img)
+        li.appendChild(span);
+        ul.appendChild(li);  
+        } catch(error){
+            console.log('wompa womp')
 
-            bookLists.push(bookList);
-            console.log(bookLists)
+            console.log(error);
+        }
 
-        })
     })
-    .catch(function(error) {
-        console.log(error);
-        });  
+})
+.catch(function(error) {
+    console.log('womp womp')
+    console.log(error);
+    });  
 
-    console.log(bookLists);
-    return bookLists;
-}
 
-  

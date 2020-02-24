@@ -4,7 +4,8 @@ const Dotenv = require('dotenv-webpack');
 module.exports = {
   entry:  {
     bookLists: './src/app.js',
-    calendarSelect: './src/calendar-select.js'
+    calendarSelect: './src/calendar-select.js',
+    overdriveQuery: './src/overdrive-query.js'
   },
   output: {
     filename: 'bundle.[name].js',

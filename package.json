@@ -8,6 +8,7 @@
     "build": "webpack",
     "start": "webpack-dev-server --open"
   },
+  "proxy": "https://www.google.com",
   "keywords": [],
   "author": "",
   "license": "ISC",
