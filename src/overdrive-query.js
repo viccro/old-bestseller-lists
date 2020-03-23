@@ -11,14 +11,13 @@ const query = 'magical negro'
 //const proxyUrl = "http://localhost:8080/";
 const proxyUrl = "https://immense-waters-04792.herokuapp.com/";
 
-  /**
-   * Queries OverDrive for availability of an asset
-   * @param {string} title
-   * @param {string[]} libraryUrls  
-   * @return {books[]} books that are available
-   */
-//Search Overdrive for a given set of library urls (taken from cookies) and return whether a book is available or not
-function searchOverdrive(title, libraryUrls) {
+/**
+ * QSearch Overdrive for a given set of library urls (taken from cookies) and return whether a book is available or not
+ * @param {string} title
+ * @param {string[]} libraryUrls  
+ * @return {books[]} books that are available
+ */
+export function searchOverdrive(title, author, libraryUrls) {
   for (var lib in libraryUrls) {
     var libraryShortName = libraryUrls[lib];
     var searchUrl =  proxyUrl + scheme + libraryShortName + url + encodeURIComponent(title);
@@ -62,5 +61,5 @@ function searchOverdrive(title, libraryUrls) {
 }
 
 
-var books = searchOverdrive('Cinderella', ['bpl', 'minuteman']);
+//var books = searchOverdrive('Cinderella', ['bpl', 'minuteman']);
 
