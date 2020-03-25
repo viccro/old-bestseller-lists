@@ -1,11 +1,15 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+var webpack = require('webpack');
 
 module.exports = {
   entry:  {
     bookLists: './src/app.js',
     calendarSelect: './src/calendar-select.js',
-    overdriveQuery: './src/overdrive-query.js'
+    bestsellers: './src/bestseller-api.js',
+    cookiesScript: './src/cookies-script.js',
+    dbConfig: './src/db.js',
+    index: './src/index.js'
   },
   output: {
     filename: 'bundle.[name].js',
@@ -17,7 +21,12 @@ module.exports = {
   plugins: [
     new Dotenv({
       path: './src/.env'
-    })
+    }),
+    new webpack.ProvidePlugin({
+      '$': 'jquery',
+      "jQuery": "jquery"
+    }),
+    
   ],
   module: {
     rules: [
@@ -38,7 +47,7 @@ module.exports = {
             options: {
               plugins: function () {
                 return [
-                  require('autoprefixer')
+                  require('autoprefixer'),
                 ];
               }
             }
@@ -52,5 +61,14 @@ module.exports = {
     ],
 
   },
-  node: {fs: "empty"}
+  externals: {
+    // require("jquery") is external and available
+    //  on the global var jQuery
+  },
+  node: {
+    fs: "empty",
+    dns: "empty",
+    net: "empty",
+    tls: "empty",
+  },
 };
