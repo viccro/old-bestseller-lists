@@ -1,8 +1,6 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
 
 module.exports = {
   entry:  {
@@ -12,7 +10,6 @@ module.exports = {
     cookiesScript: './src/cookies-script.js',
     dbConfig: './src/db.js',
     index: './src/index.js',
-    test: './src/test.js'
   },
   output: {
     filename: 'bundle.[name].js',

@@ -18,32 +18,26 @@ function displayCookieValues(list_of_libraries){
 
         let li = document.createElement('li'),
             span = document.createElement('span'),
-            x_button = document.createElement('button'),
-            x_img = document.createElement('img'),
             x_input = document.createElement('input'),
             ul = $("#libraries")[0];
             
             x_input.setAttribute("type", "image");
-            x_input.setAttribute("src", "images/600px-Dark_Red_x.svg.png");
+            x_input.setAttribute("src", "images/red_x.png");
             x_input.setAttribute("height", "10em")
 
-            // x_img.setAttribute("src", "images/600px-Dark_Red_x.svg.png")
-            // x_img.setAttribute("height", "10em")
-            
-            // x_button.setAttribute("class", "no-padding-btn")
-            // x_button.appendChild(x_img);
+            span.innerHTML = `${lib}`;
+            span.setAttribute("class", "short-lib-display-name")
 
-            span.innerHTML = `${lib} `;
             li.appendChild(span);
             li.appendChild(x_input);
             ul.appendChild(li);
 
             x_input.onclick = function(){
-                removeLibrary(lib);
+                let libraryShortName = event.currentTarget.previousSibling.innerHTML;
+                removeLibrary(libraryShortName);
                 location.reload();
             }
     }
-    
 }
 
 function getCookie()
@@ -80,7 +74,7 @@ function addLibrary(libraryUrl){
 
 function removeLibrary(libraryUrl){
     var list_of_libraries = JSON.parse(getCookie());
-    list_of_libraries.splice( list_of_libraries.indexOf(libraryUrl), 1);
+    list_of_libraries.splice( list_of_libraries.indexOf(libraryUrl) , 1);
     setCookie(JSON.stringify(list_of_libraries));
     return true;
 }
@@ -96,17 +90,6 @@ window.addLibraryFromSubmit = function (){
     }
     location.reload();
 }
-
-// $("#manageLibraries").submit(function(){
-//     alert("woah")
-
-//    var form_entries = $(this).serializeArray();
-//     try {
-//         addLibrary(form_entries[0]['value']);
-//     } catch (err) {
-//         console.log(err);
-//     }
-// })
 
 $(document).ready(function() {
     displayCookieValues(getLibraries());
