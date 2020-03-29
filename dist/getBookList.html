@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href='css/bootstrap.css' >
     <link rel="stylesheet" href='css/custom.css' >
+
+    <script src="./bundle.bestsellers.js"></script>
+    <script src="./bundle.cookiesScript.js"></script>
+    <script src="./bundle.dbConfig.js"></script>
+    <script src="./bundle.index.js"></script>
     <title>'Old' Bestsellers</title>
   </head>
 <body>
@@ -39,64 +44,43 @@
     <p>Find your next read while it's still popular!</p>
   </div>
 
-  
-
   <div class="container">
     <div class="row">
-      <div class="col-sm-12 mb-4  text-center" id="mission-statement">
-        <p class=serif>Right now, we're only searching Boston Public Library's catalog. What's more, I'm displaying all the books, not just the available ones, even though I have that data! This is due to a limitation in the NYT API which has forced me to start writing a backend with access to a long-term storage solution. It's not great, and it's not done yet, so this bit isn't entirely functional. Check out the console for proof that the functionality is there, just not displayed in a pretty format! And stay tuned for updates!</p>
-        <button type="button" class="btn btn-outline-dark btn-lg" id="run-search-btn">Click for Results!</button>
+      <div class="col-sm-12 mb-4  text-center serif" id="mission-statement">
+        <p>Right now, I'm displaying all the books, not just the available ones, even though I have that data! This is due to a limitation in the NYT API which has forced me to start writing a backend with access to a long-term storage solution. </p>
+      </div>
+      <div class="col-sm-12 mb-4 text-center serif">
+        <p>Enter the short library name from your Overdrive URL.</p>
+        <p><i>For more information about this, click <a href="brokenlink">here</a>!</i></a></p>
+        
+        
+        <form id="manageLibraries" >
+          <fieldset>
+            <span>
+              <input type="text" onsubmit="window.addLibraryFromSubmit();" id="libraryName">
+            </span>
+            <span>
+              <input onclick="window.addLibraryFromSubmit();" type="button" value="Add Library Short Name">
+            </span>
+          </fieldset>
+          </form>
+          <p>These are the libraries that you're currently searching:</p>
+          <ul style="list-style-type:none" id="libraries"></ul>
+
+      </div>
+      <div class="col-sm-12 mb-4 text-center serif">
+        <button type="button" class="btn btn-outline-dark btn-lg" onclick="window.run_queries();" id="search-btn">Click for Results!</button>
       </div>
     </div>
   </div>
-
-    <ul id="bestsellers"></ul>
 
     <div class="container">
       <div class="row" id="results">
       </div>
     </div>
-      
-    <div class="container">
-      <div class="row" id="results-demo">
-        <div class="col-sm-3  text-center">
-          <a href=URL_OVERDRIVE>
-            <img src=https://s1.nyt.com/du/books/images/9780399179563.jpg class="rounded img-fluid">
-            <p class="serif title">The Numbers Game</p>
-            <p class="serif author">Danielle Steel</p>
-          </a>
-        </div>
-  
-        <div class="col-sm-3  text-center">
-          <a href=URL_OVERDRIVE>
-            <img src=https://s1.nyt.com/du/books/images/9780399179563.jpg class="rounded img-fluid">
-            <p class="serif title">The Numbers Game</p>
-            <p class="serif author">Danielle Steel</p>
-          </a>
-        </div>
-  
-        <div class="col-sm-3  text-center">
-          <a href=URL_OVERDRIVE>
-            <img src=https://s1.nyt.com/du/books/images/9780399179563.jpg class="rounded img-fluid">
-            <p class="serif title">The Numbers Game</p>
-            <p class="serif author">Danielle Steel</p>
-          </a>
-        </div>
 
-        <div class="col-sm-3  text-center">
-          <a href=URL_OVERDRIVE>
-            <img src=https://s1.nyt.com/du/books/images/9780399179563.jpg class="rounded img-fluid">
-            <p class="serif title">The Numbers Game</p>
-            <p class="serif author">Danielle Steel</p>
-          </a>
-        </div>
-      </div>
-    </div>
 
 </body>
-  <script src="./bundle.index.js"></script>
-  <script src="./bundle.bestsellers.js"></script>
-
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>

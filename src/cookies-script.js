@@ -19,27 +19,39 @@ function displayCookieValues(list_of_libraries){
         let li = document.createElement('li'),
             span = document.createElement('span'),
             x_button = document.createElement('button'),
+            x_img = document.createElement('img'),
+            x_input = document.createElement('input'),
             ul = $("#libraries")[0];
             
-            span.innerHTML = `${lib}`;
+            x_input.setAttribute("type", "image");
+            x_input.setAttribute("src", "images/600px-Dark_Red_x.svg.png");
+            x_input.setAttribute("height", "10em")
+
+            // x_img.setAttribute("src", "images/600px-Dark_Red_x.svg.png")
+            // x_img.setAttribute("height", "10em")
+            
+            // x_button.setAttribute("class", "no-padding-btn")
+            // x_button.appendChild(x_img);
+
+            span.innerHTML = `${lib} `;
             li.appendChild(span);
-            li.appendChild(x_button);
+            li.appendChild(x_input);
             ul.appendChild(li);
 
-            x_button.onclick = function(){
+            x_input.onclick = function(){
                 removeLibrary(lib);
+                location.reload();
             }
     }
+    
 }
 
 function getCookie()
 {
     // Original JavaScript code by Chirp Internet: www.chirp.com.au
-    // Please acknowledge use of this code by including this header.
     var re = new RegExp(cookie_name + "=([^;]+)");
     var value = re.exec(document.cookie);
     var cookie_value = (value != null) ? unescape(value[1]) : null;
-
     return cookie_value;
 }
 
@@ -57,7 +69,9 @@ function deleteCookie()
 
 function addLibrary(libraryUrl){
     var current_libraries = getCookie();
-    
+    if (current_libraries === null){
+        current_libraries = "[]"
+    }
     var list_of_libraries = JSON.parse(current_libraries);
     list_of_libraries.push(libraryUrl);
     setCookie(JSON.stringify(list_of_libraries));
@@ -66,13 +80,26 @@ function addLibrary(libraryUrl){
 
 function removeLibrary(libraryUrl){
     var list_of_libraries = JSON.parse(getCookie());
-    console.log(list_of_libraries);
-    list_of_libraries.pop(libraryUrl);
+    list_of_libraries.splice( list_of_libraries.indexOf(libraryUrl), 1);
     setCookie(JSON.stringify(list_of_libraries));
     return true;
 }
 
-//$("#manageLibraries").submit(function(){
+window.addLibraryFromSubmit = function (){
+    var form = $("#manageLibraries");
+    var name = $("#libraryName");
+    var form_entries = $("#libraryName");
+    try {
+        addLibrary(form_entries[0]['value']);
+    } catch (err) {
+        console.log(err);
+    }
+    location.reload();
+}
+
+// $("#manageLibraries").submit(function(){
+//     alert("woah")
+
 //    var form_entries = $(this).serializeArray();
 //     try {
 //         addLibrary(form_entries[0]['value']);
@@ -81,4 +108,6 @@ function removeLibrary(libraryUrl){
 //     }
 // })
 
-// displayCookieValues(getLibraries());
+$(document).ready(function() {
+    displayCookieValues(getLibraries());
+})

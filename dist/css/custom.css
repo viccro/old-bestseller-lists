@@ -9,3 +9,8 @@
 .serif{
   font-family: serif;
 }
+
+.no-padding-btn{
+  padding: 0;
+}
+

@@ -1,6 +1,8 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
-var webpack = require('webpack');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 
 module.exports = {
   entry:  {
@@ -9,7 +11,8 @@ module.exports = {
     bestsellers: './src/bestseller-api.js',
     cookiesScript: './src/cookies-script.js',
     dbConfig: './src/db.js',
-    index: './src/index.js'
+    index: './src/index.js',
+    test: './src/test.js'
   },
   output: {
     filename: 'bundle.[name].js',
@@ -26,7 +29,6 @@ module.exports = {
       '$': 'jquery',
       "jQuery": "jquery"
     }),
-    
   ],
   module: {
     rules: [

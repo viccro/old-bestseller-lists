@@ -4,20 +4,14 @@ import * as moment from 'moment';
 var $ = require('jquery');
 
 var dbName = "requestStore"
+const proxyUrl = "https://immense-waters-04792.herokuapp.com/";
+
 
 /**
  * Return a version of IndexedDB based on browser in use. 
  * @return {indexedDB} the appropriate IndexedDB 
  */
 export function db_config() {
-  // window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || 
-  // window.msIndexedDB;
-   
-  // window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || 
-  // window.msIDBTransaction;
-  // window.IDBKeyRange = window.IDBKeyRange || 
-  // window.webkitIDBKeyRange || window.msIDBKeyRange
-   
   if (!window.indexedDB) {
      window.alert("Your browser doesn't support a stable version of IndexedDB.")
   }
@@ -52,7 +46,7 @@ export function db_add(TIMESTAMP, URL, book, LIBRARY, AVAILABLE) {
 
     var request = db.transaction(["requests"], "readwrite")
     .objectStore("requests")
-    .put({ timestamp: TIMESTAMP, availability: AVAILABLE, library: LIBRARY, title: book.title, url: URL, image: book.cover });
+    .put({ timestamp: TIMESTAMP, availability: AVAILABLE, library: LIBRARY, title: book.title, url: URL, image: book.cover, book_url: book.book_url });
     
     request.onsuccess = function(event) {
       //Stub
@@ -66,10 +60,8 @@ export function db_add(TIMESTAMP, URL, book, LIBRARY, AVAILABLE) {
 
 export function lookup_availability(book, librariesList) {
   var request = indexedDB.open(dbName);
-
   request.onsuccess = function(event) {
     var db = event.target.result;
-    
     for (var lib in librariesList) {
       var libraryShortName = librariesList[lib];
 
@@ -84,7 +76,7 @@ export function lookup_availability(book, librariesList) {
         if (entry && is_valid_timestamp(entry.timestamp)) {
             //Use the cached data
             if (!entry.availability){
-              display_available_book(book, libraryShortName, entry.url)
+              display_available_book(book, libraryShortName, entry.book_url)
             }
         }
         else {
@@ -108,18 +100,3 @@ function is_valid_timestamp(timestamp){
   return (moment(formatted_time).isAfter(yesterday))
 }
 
-//add("yesterday", "wub.com", "Go Dog Go", "bpl", true)
-
-db_config()
-//async_add("tomorrow", "www.wub.com", "Go Dog Go", "bpl", true)
-lookup_availability("wub.com.blob")
-
-// Use transaction oncomplete to make sure the objectStore creation is 
-    // finished before adding data into it.
-    // indexedDB.objectStore.transaction.oncomplete = function(event) {
-    //   // Store values in the newly created objectStore.
-    //   var customerObjectStore = db.transaction("customers", "readwrite").objectStore("customers");
-    //   requestData.forEach(function(customer) {
-    //     customerObjectStore.add(customer);
-    //   });
-    // };
