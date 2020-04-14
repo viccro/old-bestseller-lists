@@ -6,10 +6,6 @@
     <link rel="stylesheet" href='css/bootstrap.css' >
     <link rel="stylesheet" href='css/custom.css' >
 
-    <script src="./bundle.bestsellers.js"></script>
-    <script src="./bundle.cookiesScript.js"></script>
-    <script src="./bundle.dbConfig.js"></script>
-    <script src="./bundle.index.js"></script>
     <title>'Old' Bestsellers</title>
   </head>
 <body>
@@ -25,13 +21,13 @@
         <a class="nav-link active" href="#">Search</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="birthday.html">Your birthday</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="history.html">This Day in History</a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link" href="faq.html">FAQs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="overdrive.html">Overdrive</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="nyt.html">NYT Bestsellers List</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="about-us.html">About Us</a>
@@ -46,18 +42,38 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-sm-12 mb-4  text-center serif" id="mission-statement">
+      <div class=" text-center serif" id="notice">
         <p>Right now, I'm displaying all the books, not just the available ones, even though I have that data! This is due to a limitation in the NYT API which has forced me to start writing a backend with access to a long-term storage solution. </p>
       </div>
+      <ul class="text-center serif" id="warnings"></ul>
+
       <div class="col-sm-12 mb-4 text-center serif">
         <p>Enter the short library name from your Overdrive URL.</p>
-        <p><i>For more information about this, click <a href="brokenlink">here</a>!</i></p>
-        
-        
+        <p><i>For more information about this, <button class="btn btn-link" data-toggle="modal" data-target="#myModal">click here!</button></i></p>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header text-center serif">
+                <h4 class="modal-title " id="myModalLabel">Finding a library short name</h4>
+              </div>
+              <div class="modal-body text-center serif">
+                <p>To find your library's short name, navigate to your library's OverDrive page. This can be found either directly from your library's webpage or from a web search.</p>
+                <p>The URL for that OverDrive site will take the form abc.overdrive.com. The <b>abc</b> is the library short name that needs to be entered into the box at the top of the search page.</p>
+                <p><i>The Boston Public Library's OverDrive URL is <a href="bpl.overdrive.com">bpl.overdrive.com</a>, so the library short name would be <b>bpl</b>.</i></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <form id="manageLibraries" >
           <fieldset>
             <span>
-              <input type="text" onsubmit="window.addLibraryFromSubmit();" id="libraryName">
+              <input type="text" value="bpl" onsubmit="window.addLibraryFromSubmit();" id="libraryName">
             </span>
             <span>
               <input onclick="window.addLibraryFromSubmit();" type="button" value="Add Library Short Name">
@@ -66,6 +82,7 @@
           </form>
           <p>These are the libraries that you're currently searching:</p>
           <ul style="list-style-type:none" id="libraries"></ul>
+          <p class="hidden" id="libraryList"></p>
 
       </div>
       <div class="col-sm-12 mb-4 text-center serif">
@@ -78,10 +95,12 @@
     <div class="row" id="results">
     </div>
   </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="./bundle.bestsellers.js"></script>
+  <script src="./bundle.cookiesScript.js"></script>
+  <script src="./bundle.index.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </body>
 
 </html>

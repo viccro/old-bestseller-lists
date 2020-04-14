@@ -4,11 +4,8 @@ const webpack = require('webpack');
 
 module.exports = {
   entry:  {
-    bookLists: './src/app.js',
-    calendarSelect: './src/calendar-select.js',
     bestsellers: './src/bestseller-api.js',
     cookiesScript: './src/cookies-script.js',
-    dbConfig: './src/db.js',
     index: './src/index.js',
   },
   output: {

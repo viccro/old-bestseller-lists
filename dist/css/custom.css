@@ -17,3 +17,20 @@
 .short-lib-display-name{
   padding-right: .5em;
 }
+
+#warnings {
+  list-style-type: "⚠️";
+  color: red;
+}
+
+.btn-link{
+  padding: 0;
+}
+
+.hidden{
+  display: none;
+}
+
+.graphic-arrow{
+  font-size: xx-large;
+}

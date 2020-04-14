@@ -12,7 +12,8 @@ function setCookie(value)
     document.cookie = cookie_name + "=" + escape(value) + "; path=/; expires=" + expiration_date.toGMTString();
 }
 
-function displayCookieValues(list_of_libraries){
+export function displayCookieValues(list_of_libraries){
+
     for (var library in list_of_libraries){
         var lib = list_of_libraries[library]
 
@@ -74,6 +75,7 @@ function addLibrary(libraryUrl){
 
 function removeLibrary(libraryUrl){
     var list_of_libraries = JSON.parse(getCookie());
+    console.log(list_of_libraries)
     list_of_libraries.splice( list_of_libraries.indexOf(libraryUrl) , 1);
     setCookie(JSON.stringify(list_of_libraries));
     return true;
@@ -91,6 +93,4 @@ window.addLibraryFromSubmit = function (){
     location.reload();
 }
 
-$(document).ready(function() {
-    displayCookieValues(getLibraries());
-})
+
