@@ -34,3 +34,11 @@
 .graphic-arrow{
   font-size: xx-large;
 }
+
+.shadow{
+  text-shadow: 2px 2px 2px #fbe8d6;
+}
+
+.bolder{
+  font-weight: bolder;
+}

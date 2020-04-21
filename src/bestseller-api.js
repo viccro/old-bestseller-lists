@@ -1,4 +1,4 @@
-import {getLibraries, displayCookieValues} from './cookies-script';
+import {getLibraries, displayListOfLibraries} from './cookies-script';
 import * as moment from 'moment';
 
 var $ = require('jquery');
@@ -14,18 +14,27 @@ const url = process.env.OVERDRIVE_SEARCH_URL_ROOT;
 const scheme = process.env.OVERDRIVE_SCHEME;
 const proxyUrl = "https://immense-waters-04792.herokuapp.com/";
 
-displayCookieValues(getLibraries());
- 
+displayListOfLibraries(getLibraries());
+
+/**
+ * Run on "Click for Results!", this is the main function of the search. It kicks off querying the NYT api and continues to do so
+ * until enough items have been found for checkout in the libraries selected. 
+ */
 window.run_queries = async function (){
+  setResultsHeader("Your results are loading! The newest bestsellers from the NYT list that are available from your libraries are:")
     while(!enough_items_found()){
     let date_string = list_date.format('YYYY-MM-DD'); 
-    await getBestsellers(generate_url( date_string ,'hardcover-fiction' ));
+    await getBestsellers(generate_nyt_url( date_string ,'hardcover-fiction' ));
     
     list_date = list_date.subtract(7, 'days'); 
     }
+  setResultsHeader("The newest bestsellers from the NYT list that are available from your libraries are:")
 }
 
-//Hit the NYT Book Lists API to get a list of possible Bestseller Lists to access
+/**
+ * Hit the NYT Book Lists API to get a list of possible Bestseller Lists to access
+ * @param {string} url 
+ */
 async function getBestsellers(url){
     let bestsellers = fetch(url)
     .then((resp) => resp.json())
@@ -48,6 +57,13 @@ async function getBestsellers(url){
     return bestsellers;
 }
 
+/**
+ * Add a child element to the #results object with a record representing the work found
+ * @param {bookObject} book A book object ready to display
+ * @param {string} library The library short name where the record was found
+ * @param {string} overdrive_url The overdrive url for the asset, to link directly to it
+ * @param {boolean} is_audio Whether the book is an audio resource, for the format icon
+ */
 export function display_available_book(book, library, overdrive_url, is_audio){
   let div_row = $("#results")[0],
     div_col = document.createElement('div'),
@@ -72,10 +88,10 @@ export function display_available_book(book, library, overdrive_url, is_audio){
     div_col_icon.appendChild(format_icon);
 
     p_author.innerHTML = book.author;
-    p_author.setAttribute("class", "serif author text-left");
+    p_author.setAttribute("class", " author text-left");
 
     p_title.innerHTML = book.title;
-    p_title.setAttribute("class","serif title font-weight-bold text-left mt-1 mb-0");
+    p_title.setAttribute("class"," title font-weight-bold text-left mt-1 mb-0");
 
     div_col_text.setAttribute("class", "col-sm-8 text-center");
     div_col_text.appendChild(p_title);
@@ -98,19 +114,21 @@ export function display_available_book(book, library, overdrive_url, is_audio){
     div_row.appendChild(div_col);
 }
 
-function generate_url(date,book_list){
+/**
+ * Generates a url to query the NYT bestseller list specified on the selected date
+ * @param {string} date A date of the format YYYY-MM-DD
+ * @param {string} book_list a list from the available book types that have a NYT Bestsellers list.
+ */
+function generate_nyt_url(date,book_list){
     return process.env.NYT_API_URL + date + '/' + book_list + '.json?api-key='+process.env.NYT_API_KEY; 
 }
 
-window.generate_url = generate_url;
-
-function stringify_date(date){
-    return date.getFullYear() + '-' + ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2);
-}
-
+/**
+ * Returns true if the results row on the search page contains more than 12 results
+ * @return {boolean}
+ */
 export function enough_items_found(){
     let count = $("#results").find(".book-item").length;
-    console.log(count + " items found so far")
     return (count > 12);
 }
 
@@ -166,6 +184,12 @@ export function search_overdrive(book_object, libraryUrls) {
     }
 }
 
+/**
+ * Constructs an overdrive url to query for an asset by title at a given library, using the hardcoded proxy url to handle CORS
+ * @param {string} title 
+ * @param {string} libraryShortName 
+ * @return {string} a valid overdrive url to search for the asset by title 
+ */
 export function generate_overdrive_url(title, libraryShortName){
   return proxyUrl + scheme + libraryShortName + url + encodeURIComponent(title);
 }
@@ -196,6 +220,14 @@ function db_config() {
   }
 }
 
+/**
+ * Opens a connection to the indexedDB database and adds a record as specified
+ * @param {string} TIMESTAMP 
+ * @param {string} URL 
+ * @param {bookObject} book 
+ * @param {string} LIBRARY 
+ * @param {string} AVAILABLE 
+ */
 export function db_add(TIMESTAMP, URL, book, LIBRARY, AVAILABLE) {
   var request = indexedDB.open(dbName);
 
@@ -219,6 +251,13 @@ export function db_add(TIMESTAMP, URL, book, LIBRARY, AVAILABLE) {
   }
 }
 
+/**
+ * Opens a connection to the indexedDB and checks whether there is a valid cached result for the book/library combo stored
+ * If so, and the book is available, the book is displayed.
+ * If not, a request is made to overdrive and the book is displayed if appropriate. The result is then stored in the IndexedDB cache.
+ * @param {bookObject} book book object to be looked up
+ * @param {[string]} librariesList list of library short names
+ */
 export function lookup_availability(book, librariesList) {
   let request = indexedDB.open(dbName);
   request.onsuccess = function(event) {
@@ -254,6 +293,11 @@ export function lookup_availability(book, librariesList) {
   };
 }
 
+/**
+ * Determines whether a timestamp is recent enough (set within the past 24 hours) to be valid in the cache 
+ * @param {timestamp} timestamp the timestamp of unknown age
+ * @return {boolean} whether the timestamp is recent enough or not
+ */
 function is_valid_timestamp(timestamp){
   let today = moment();
   let yesterday = today.subtract(1, 'days')
@@ -286,4 +330,14 @@ function warn_about_invalid_library_url(searchUrl){
   li.innerHTML = `${libraryShortName} does not appear to be a valid library short name.`;
 
   warnings_ul.appendChild(li);
+}
+
+/**
+ * This function sets the message prepending the results on the getBookList page. This will wipe any existing message clean.
+ * @param {string} headerMessage the only message to display in the resultsHeader row.
+ */
+function setResultsHeader(headerMessage){
+  let div_row = $("#resultsHeader"),
+    results_header_p = div_row.children()[0];
+  results_header_p.innerHTML = headerMessage;
 }
